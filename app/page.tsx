@@ -4,14 +4,14 @@ import { useState, useMemo } from "react";
 import { useExpenses } from "@/hooks/useExpenses";
 import { Expense, ExpenseFilters } from "@/lib/types";
 import { filterExpenses } from "@/lib/utils";
-import { exportToCSV } from "@/lib/storage";
 import SummaryCards from "@/components/SummaryCards";
 import Charts from "@/components/Charts";
 import ExpenseFiltersBar from "@/components/ExpenseFilters";
 import ExpenseList from "@/components/ExpenseList";
 import ExpenseForm from "@/components/ExpenseForm";
 import DeleteConfirm from "@/components/DeleteConfirm";
-import { Plus, Download, BarChart2, List } from "lucide-react";
+import ExportModal from "@/components/ExportModal";
+import { Plus, Upload, BarChart2, List } from "lucide-react";
 
 const EMPTY_FILTERS: ExpenseFilters = {
   dateFrom: "",
@@ -27,6 +27,7 @@ export default function Home() {
   const [tab, setTab] = useState<Tab>("dashboard");
   const [filters, setFilters] = useState<ExpenseFilters>(EMPTY_FILTERS);
   const [showForm, setShowForm] = useState(false);
+  const [showExport, setShowExport] = useState(false);
   const [editTarget, setEditTarget] = useState<Expense | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
@@ -82,11 +83,11 @@ export default function Home() {
 
           <div className="flex items-center gap-2">
             <button
-              onClick={() => exportToCSV(expenses)}
+              onClick={() => setShowExport(true)}
               disabled={expenses.length === 0}
-              className="hidden sm:flex items-center gap-2 px-3 py-2 text-sm text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              className="hidden sm:flex items-center gap-2 px-3 py-2 text-sm text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg border border-gray-200 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
             >
-              <Download size={15} /> Export CSV
+              <Upload size={15} /> Export Data
             </button>
             <button
               onClick={handleAdd}
@@ -149,20 +150,18 @@ export default function Home() {
         {tab === "expenses" && (
           <>
             <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-base font-semibold text-gray-700">
-                  All Expenses
-                  <span className="ml-2 text-xs font-normal text-gray-400">
-                    ({filtered.length} of {expenses.length})
-                  </span>
-                </h2>
-              </div>
+              <h2 className="text-base font-semibold text-gray-700">
+                All Expenses
+                <span className="ml-2 text-xs font-normal text-gray-400">
+                  ({filtered.length} of {expenses.length})
+                </span>
+              </h2>
               <button
-                onClick={() => exportToCSV(filtered)}
-                disabled={filtered.length === 0}
-                className="sm:hidden flex items-center gap-1 text-sm text-gray-600 hover:text-gray-800 disabled:opacity-40"
+                onClick={() => setShowExport(true)}
+                disabled={expenses.length === 0}
+                className="flex items-center gap-1.5 text-sm text-gray-600 hover:text-gray-800 font-medium disabled:opacity-40 disabled:cursor-not-allowed"
               >
-                <Download size={14} /> Export
+                <Upload size={14} /> Export
               </button>
             </div>
             <ExpenseFiltersBar filters={filters} onChange={setFilters} />
@@ -187,6 +186,12 @@ export default function Home() {
         <DeleteConfirm
           onConfirm={handleDeleteConfirm}
           onCancel={() => setDeleteId(null)}
+        />
+      )}
+      {showExport && (
+        <ExportModal
+          expenses={expenses}
+          onClose={() => setShowExport(false)}
         />
       )}
     </div>
