@@ -85,8 +85,7 @@ export default function Home() {
             {/* Export Hub */}
             <button
               onClick={() => setShowHub(true)}
-              disabled={expenses.length === 0}
-              className="flex items-center gap-2 px-3 py-2 text-sm font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded-lg transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              className="flex items-center gap-2 px-3 py-2 text-sm font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded-lg transition-colors"
             >
               <Rocket size={14} /> Export Hub
             </button>
@@ -159,8 +158,7 @@ export default function Home() {
               </h2>
               <button
                 onClick={() => setShowHub(true)}
-                disabled={expenses.length === 0}
-                className="flex items-center gap-1.5 text-sm font-semibold text-indigo-600 hover:text-indigo-800 disabled:opacity-40"
+                className="flex items-center gap-1.5 text-sm font-semibold text-indigo-600 hover:text-indigo-800"
               >
                 <Rocket size={14} /> Export Hub
               </button>
