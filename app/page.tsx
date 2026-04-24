@@ -126,6 +126,15 @@ export default function Home() {
           <>
             <SummaryCards expenses={expenses} />
             <Charts expenses={expenses} />
+            <div className="flex justify-end">
+              <button
+                onClick={() => exportToCSV(expenses)}
+                disabled={expenses.length === 0}
+                className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 text-sm text-gray-700 font-medium rounded-lg shadow-sm hover:bg-gray-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                <Download size={15} /> Export Data
+              </button>
+            </div>
             {/* Recent expenses */}
             <div>
               <div className="flex items-center justify-between mb-3">
