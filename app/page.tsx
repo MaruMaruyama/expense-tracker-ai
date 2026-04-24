@@ -11,7 +11,8 @@ import ExpenseFiltersBar from "@/components/ExpenseFilters";
 import ExpenseList from "@/components/ExpenseList";
 import ExpenseForm from "@/components/ExpenseForm";
 import DeleteConfirm from "@/components/DeleteConfirm";
-import { Plus, Download, BarChart2, List } from "lucide-react";
+import ExportHub from "@/components/ExportHub";
+import { Plus, Download, BarChart2, List, Rocket } from "lucide-react";
 
 const EMPTY_FILTERS: ExpenseFilters = {
   dateFrom: "",
@@ -27,27 +28,18 @@ export default function Home() {
   const [tab, setTab] = useState<Tab>("dashboard");
   const [filters, setFilters] = useState<ExpenseFilters>(EMPTY_FILTERS);
   const [showForm, setShowForm] = useState(false);
+  const [showHub, setShowHub] = useState(false);
   const [editTarget, setEditTarget] = useState<Expense | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
   const filtered = useMemo(() => filterExpenses(expenses, filters), [expenses, filters]);
 
-  function handleAdd() {
-    setEditTarget(null);
-    setShowForm(true);
-  }
-
-  function handleEdit(e: Expense) {
-    setEditTarget(e);
-    setShowForm(true);
-  }
+  function handleAdd() { setEditTarget(null); setShowForm(true); }
+  function handleEdit(e: Expense) { setEditTarget(e); setShowForm(true); }
 
   function handleFormSubmit(data: Omit<Expense, "id" | "createdAt">) {
-    if (editTarget) {
-      updateExpense(editTarget.id, data);
-    } else {
-      addExpense(data);
-    }
+    if (editTarget) updateExpense(editTarget.id, data);
+    else addExpense(data);
     setShowForm(false);
     setEditTarget(null);
   }
@@ -81,13 +73,24 @@ export default function Home() {
           </div>
 
           <div className="flex items-center gap-2">
+            {/* Quick CSV (kept for convenience) */}
             <button
               onClick={() => exportToCSV(expenses)}
               disabled={expenses.length === 0}
-              className="hidden sm:flex items-center gap-2 px-3 py-2 text-sm text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              className="hidden sm:flex items-center gap-1.5 px-3 py-2 text-sm text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
             >
-              <Download size={15} /> Export CSV
+              <Download size={14} /> CSV
             </button>
+
+            {/* Export Hub */}
+            <button
+              onClick={() => setShowHub(true)}
+              disabled={expenses.length === 0}
+              className="flex items-center gap-2 px-3 py-2 text-sm font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded-lg transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              <Rocket size={14} /> Export Hub
+            </button>
+
             <button
               onClick={handleAdd}
               className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition-colors"
@@ -126,7 +129,6 @@ export default function Home() {
           <>
             <SummaryCards expenses={expenses} />
             <Charts expenses={expenses} />
-            {/* Recent expenses */}
             <div>
               <div className="flex items-center justify-between mb-3">
                 <h2 className="text-base font-semibold text-gray-700">Recent Expenses</h2>
@@ -149,20 +151,18 @@ export default function Home() {
         {tab === "expenses" && (
           <>
             <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-base font-semibold text-gray-700">
-                  All Expenses
-                  <span className="ml-2 text-xs font-normal text-gray-400">
-                    ({filtered.length} of {expenses.length})
-                  </span>
-                </h2>
-              </div>
+              <h2 className="text-base font-semibold text-gray-700">
+                All Expenses
+                <span className="ml-2 text-xs font-normal text-gray-400">
+                  ({filtered.length} of {expenses.length})
+                </span>
+              </h2>
               <button
-                onClick={() => exportToCSV(filtered)}
-                disabled={filtered.length === 0}
-                className="sm:hidden flex items-center gap-1 text-sm text-gray-600 hover:text-gray-800 disabled:opacity-40"
+                onClick={() => setShowHub(true)}
+                disabled={expenses.length === 0}
+                className="flex items-center gap-1.5 text-sm font-semibold text-indigo-600 hover:text-indigo-800 disabled:opacity-40"
               >
-                <Download size={14} /> Export
+                <Rocket size={14} /> Export Hub
               </button>
             </div>
             <ExpenseFiltersBar filters={filters} onChange={setFilters} />
@@ -188,6 +188,9 @@ export default function Home() {
           onConfirm={handleDeleteConfirm}
           onCancel={() => setDeleteId(null)}
         />
+      )}
+      {showHub && (
+        <ExportHub expenses={expenses} onClose={() => setShowHub(false)} />
       )}
     </div>
   );
