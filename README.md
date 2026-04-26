@@ -6,14 +6,27 @@ A modern personal finance tracker built with Next.js 14.
 
 ## Features
 
-- Add, edit, and delete expenses with category, date, and description
-- Dashboard with spending summaries and charts (monthly trend + category breakdown)
-- Filter and search expenses by date range, category, or keyword
-- Export expenses to CSV
+**Expense Management**
+- Add, edit, and delete expenses with amount, category, date, and description
+- 6 categories: Food, Transportation, Entertainment, Shopping, Bills, Other
+- Search and filter by date range, category, or keyword
+
+**Dashboard**
+- Summary cards: total spending, monthly spending, top category, average per expense
+- Monthly bar chart (last 6 months) and category donut chart
+- Recent expenses at a glance
+
+**Export Hub** (🚀)
+- 5 export templates: Tax Report, Monthly Summary, Category Analysis, Budget Review, Year in Review
+- 8 cloud destinations: Email, Google Sheets, Notion, Dropbox, OneDrive, Slack, Zapier, Airtable
+- Recurring auto-export scheduler (daily / weekly / monthly)
+- Export history with status tracking and one-click re-export
+- Shareable report links with QR code generation and expiry settings
 
 ## Tech Stack
 
-- Next.js 14 (App Router) · TypeScript · Tailwind CSS · Recharts
+- Next.js 14 (App Router) · TypeScript · Tailwind CSS
+- Recharts · jsPDF · qrcode · lucide-react
 
 ## Local Development
 
